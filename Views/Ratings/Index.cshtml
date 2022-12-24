@@ -1,0 +1,46 @@
+﻿@model IEnumerable<AspMusicStore.Models.Rating>
+
+@{
+    ViewData["Title"] = "Ratings";
+}
+
+<h1>Ratings</h1>
+
+<form asp-action="Analytics"><button>Analytics</button></form>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.RatingValue)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Track)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.RatingValue)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Track.TrackTitle)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.RatingID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.RatingID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.RatingID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
