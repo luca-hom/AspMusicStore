@@ -30,9 +30,9 @@ namespace AspMusicStore.Data
             modelBuilder.Entity<TrackList>().ToTable("TrackList");
 
             //Foreign Keys for Lists
-            modelBuilder.Entity<AudioStorageList>().HasKey(x => new { x.AudioStorageID, x.AlbumID });
-            modelBuilder.Entity<MusicianList>().HasKey(x => new { x.TrackID, x.MusicianID });
-            modelBuilder.Entity<TrackList>().HasKey(x => new { x.AlbumID, x.TrackID });
+            modelBuilder.Entity<AudioStorageList>().HasKey(a => new { a.AudioStorageID, a.AlbumID });
+            modelBuilder.Entity<MusicianList>().HasKey(m => new { m.TrackID, m.MusicianID });
+            modelBuilder.Entity<TrackList>().HasKey(t => new { t.AlbumID, t.TrackID });
 
         }
 
