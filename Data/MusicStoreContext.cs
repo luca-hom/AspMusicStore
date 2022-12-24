@@ -17,6 +17,7 @@ namespace AspMusicStore.Data
         public DbSet<MusicianList> MusicianLists { get; set; }
         public DbSet<Track> Tracks { get; set; }
         public DbSet<TrackList> TrackLists { get; set; }
+        public DbSet<Rating> Ratings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -28,6 +29,8 @@ namespace AspMusicStore.Data
             modelBuilder.Entity<MusicianList>().ToTable("MusicianList");
             modelBuilder.Entity<Track>().ToTable("Track");
             modelBuilder.Entity<TrackList>().ToTable("TrackList");
+            modelBuilder.Entity<Rating>().ToTable("Ratings");
+
 
             //Foreign Keys for Lists
             modelBuilder.Entity<AudioStorageList>().HasKey(a => new { a.AudioStorageID, a.AlbumID });

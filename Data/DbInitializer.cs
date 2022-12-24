@@ -1,4 +1,5 @@
 ﻿using AspMusicStore.Models;
+using System.Security.Policy;
 
 namespace AspMusicStore.Data
 {
@@ -127,6 +128,21 @@ namespace AspMusicStore.Data
             {
                 context.TrackLists.Add(trL);
                 Console.WriteLine("Added trackLists: " + trL);
+            }
+            context.SaveChanges();
+
+            var ratings = new Rating[]
+            {
+                new Rating{ RatingValue= 1, TrackID= 1 },
+                new Rating{ RatingValue= 2, TrackID= 1 },
+                new Rating{ RatingValue= 3, TrackID= 1 },
+                new Rating{ RatingValue= 2, TrackID= 2 },
+                new Rating{ RatingValue= 5, TrackID= 1 },
+            };
+            foreach (Rating r in ratings) 
+            {
+                context.Ratings.Add(r);
+                Console.WriteLine("Added ratings: " + r);
             }
             context.SaveChanges();
 
