@@ -34,7 +34,7 @@ namespace AspMusicStore.Data
                 new Album{ AlbumTitle="Album Title 1", Description="Description 1", GenreID=1 },
                 new Album{ AlbumTitle="Album Title 2", Description="Description 2", GenreID=2 },
                 new Album{ AlbumTitle="Album Title 3", Description="Description 3", GenreID=1 },
-                new Album{ AlbumTitle="Album Title 4", Description="Description 4", GenreID=2 }
+                new Album{ AlbumTitle="Album Title 4", Description="Description 4", GenreID=2,}
             };
             foreach (Album a in albums)
             {
@@ -57,18 +57,6 @@ namespace AspMusicStore.Data
             }
             context.SaveChanges();
 
-            var audioStorageLists = new AudioStorageList[]
-            {
-                new AudioStorageList{ AlbumID=1, AudioStorageID=1 },
-                new AudioStorageList{ AlbumID=2, AudioStorageID=1 },
-                new AudioStorageList{ AlbumID=3, AudioStorageID=2 }
-            };
-            foreach (AudioStorageList auL in audioStorageLists)
-            {
-                context.AudioStorageLists.Add(auL);
-                Console.WriteLine("Added audioStorageList: " + auL);
-            }
-            context.SaveChanges();
 
             var musicians = new Musician[]
             {
@@ -101,35 +89,6 @@ namespace AspMusicStore.Data
             }
             context.SaveChanges();
 
-            var musicianlists = new MusicianList[]
-            {
-                new MusicianList{ TrackID=1, MusicianID=1 },
-                new MusicianList{ TrackID=2, MusicianID=1 },
-                new MusicianList{ TrackID=1, MusicianID=2 },
-            };
-            foreach (MusicianList mL in musicianlists)
-            {
-                context.MusicianLists.Add(mL);
-                Console.WriteLine("Added musicianList: " + mL);
-            }
-            context.SaveChanges();
-
-
-            var trackLists = new TrackList[]
-            {
-                new TrackList{ AlbumID=1, TrackID=1 },
-                new TrackList{ AlbumID=1, TrackID=2 },
-                new TrackList{ AlbumID=1, TrackID=3 },
-                new TrackList{ AlbumID=1, TrackID=4 },
-                new TrackList{ AlbumID=2, TrackID=5 },
-                new TrackList{ AlbumID=2, TrackID=2 },
-            };
-            foreach (TrackList trL in trackLists)
-            {
-                context.TrackLists.Add(trL);
-                Console.WriteLine("Added trackLists: " + trL);
-            }
-            context.SaveChanges();
 
             var ratings = new Rating[]
             {
@@ -145,6 +104,33 @@ namespace AspMusicStore.Data
                 Console.WriteLine("Added ratings: " + r);
             }
             context.SaveChanges();
+
+            
+            ICollection<Track> trackList = new List<Track> {
+                context.Tracks.FirstOrDefault(t => t.TrackID == 1),
+                context.Tracks.FirstOrDefault(t => t.TrackID == 2),
+                context.Tracks.FirstOrDefault(t => t.TrackID == 3)
+            };
+
+            ICollection<AudioStorage> audioStorageList = new List<AudioStorage> {
+                context.AudioStorages.FirstOrDefault(a => a.AudioStorageID == 1),
+                context.AudioStorages.FirstOrDefault(a => a.AudioStorageID == 2),
+                context.AudioStorages.FirstOrDefault(a => a.AudioStorageID == 3)
+            };
+
+            context.Albums.Add(new Album { AlbumTitle = "Album Title 5 Full", Description = "Description 5", GenreID = 2, Tracks = trackList, AudioStorages=audioStorageList });
+            context.SaveChanges();
+
+            ICollection<Musician> musicianList = new List<Musician> {
+                context.Musicians.FirstOrDefault(a => a.MusicianID == 1),
+                context.Musicians.FirstOrDefault(a => a.MusicianID == 2),
+                context.Musicians.FirstOrDefault(a => a.MusicianID == 3)
+            };
+
+            context.Tracks.Add(new Track { TrackTitle = "Track Title 7 Full", Musicians = musicianList } );
+            context.SaveChanges();
+
+
 
         }
     }

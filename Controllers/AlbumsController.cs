@@ -22,7 +22,8 @@ namespace AspMusicStore.Controllers
         // GET: Albums
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Albums.ToListAsync());
+            var musicStoreContext = _context.Albums.Include(a => a.Genre);
+            return View(await musicStoreContext.ToListAsync());
         }
 
         // GET: Albums/Details/5
@@ -34,6 +35,7 @@ namespace AspMusicStore.Controllers
             }
 
             var album = await _context.Albums
+                .Include(a => a.Genre)
                 .FirstOrDefaultAsync(m => m.AlbumID == id);
             if (album == null)
             {
@@ -46,6 +48,7 @@ namespace AspMusicStore.Controllers
         // GET: Albums/Create
         public IActionResult Create()
         {
+            ViewData["GenreID"] = new SelectList(_context.Genres, "GenreID", "GenreName");
             return View();
         }
 
@@ -54,7 +57,7 @@ namespace AspMusicStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AlbumID,AlbumTitle,Description,GenreID")] Album album)
+        public async Task<IActionResult> Create([Bind("AlbumTitle,Description,GenreID")] Album album)
         {
             if (ModelState.IsValid)
             {
@@ -62,6 +65,7 @@ namespace AspMusicStore.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["GenreID"] = new SelectList(_context.Genres, "GenreID", "GenreID", album.GenreID);
             return View(album);
         }
 
@@ -78,6 +82,7 @@ namespace AspMusicStore.Controllers
             {
                 return NotFound();
             }
+            ViewData["GenreID"] = new SelectList(_context.Genres, "GenreID", "GenreID", album.GenreID);
             return View(album);
         }
 
@@ -86,7 +91,7 @@ namespace AspMusicStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("AlbumID,AlbumTitle,Description,GenreID")] Album album)
+        public async Task<IActionResult> Edit(int id, [Bind("AlbumTitle,Description,GenreID")] Album album)
         {
             if (id != album.AlbumID)
             {
@@ -113,6 +118,7 @@ namespace AspMusicStore.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["GenreID"] = new SelectList(_context.Genres, "GenreID", "GenreID", album.GenreID);
             return View(album);
         }
 
@@ -125,6 +131,7 @@ namespace AspMusicStore.Controllers
             }
 
             var album = await _context.Albums
+                .Include(a => a.Genre)
                 .FirstOrDefaultAsync(m => m.AlbumID == id);
             if (album == null)
             {

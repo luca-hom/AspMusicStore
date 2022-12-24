@@ -6,6 +6,6 @@
         public string AudioStorageName { get; set; }
 
         //Navigation properties
-        public ICollection<AudioStorageList>? AudioStorageList { get; set; }
+        public ICollection<Album>? Albums { get; set; }
     }
 }

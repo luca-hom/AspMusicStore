@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 
 namespace AspMusicStore.Models
 {
@@ -10,10 +11,12 @@ namespace AspMusicStore.Models
 
         [ForeignKey("Genre")]
         public int GenreID { get; set; }
+        [NotMapped]
+        public string GenreName { get; set; }
 
         //Navigation Properties
         public Genre Genre { get; set; }
-        public ICollection<TrackList> Tracks { get; set; }
-        public ICollection<AudioStorageList>? AudioStorageLists { get; set; }
+        public ICollection<Track> Tracks { get; set; }
+        public ICollection<AudioStorage>? AudioStorages { get; set; }
     }
 }

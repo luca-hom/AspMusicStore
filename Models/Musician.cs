@@ -6,6 +6,6 @@
         public string MusicianName { get; set; }
 
         //Navigation properties
-         public ICollection<MusicianList> MusicianLists { get; set; }
+         public ICollection<Track> Tracks { get; set; }
     }
 }
