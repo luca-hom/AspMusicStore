@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AspMusicStore.Data;
 using AspMusicStore.Models;
+using Microsoft.IdentityModel.Logging;
 
 namespace AspMusicStore.Controllers
 {
@@ -162,7 +163,22 @@ namespace AspMusicStore.Controllers
 
         public async Task<IActionResult> Analytics()
         {
-            var musicStoreContext = _context.Ratings.Include(r => r.Track);
+            var musicStoreContext = _context.Ratings
+                .Include(r => r.Track);
+
+
+            foreach (var item in musicStoreContext)
+            {
+                var trackRatingList = _context.Ratings
+                    .Where(r => r.TrackID == item.TrackID)
+                    .Select(s => s.RatingValue)
+                    .ToList();
+
+                item.Track.TrackRating = trackRatingList.Average();
+
+            }
+            
+
 
             return View(await musicStoreContext.ToListAsync());
         }

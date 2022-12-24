@@ -28,10 +28,10 @@
 
           var data = google.visualization.arrayToDataTable([
             ['Tracks', 'Rating',],
-              @foreach (var item in Model)
+              @foreach (var item in Model.DistinctBy(x => x.TrackID))
                 {
                     <text>
-                        ['@item.Track.TrackTitle', @item.RatingValue],
+                        ['@item.Track.TrackTitle', @item.Track.TrackRating],
                     </text>
                 }
     
