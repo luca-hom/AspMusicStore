@@ -164,23 +164,54 @@ namespace AspMusicStore.Controllers
         public async Task<IActionResult> Analytics()
         {
             var musicStoreContext = _context.Ratings
-                .Include(r => r.Track);
+                .Include(r => r.Track)
+                .ThenInclude(a => a.Albums);
 
-
-            foreach (var item in musicStoreContext)
-            {
-                var trackRatingList = _context.Ratings
-                    .Where(r => r.TrackID == item.TrackID)
-                    .Select(s => s.RatingValue)
-                    .ToList();
-
-                item.Track.TrackRating = trackRatingList.Average();
-
-            }
-            
-
+            CalculateRatings(_context);
 
             return View(await musicStoreContext.ToListAsync());
+        }
+
+        public static void CalculateRatings(MusicStoreContext externalContext)
+        {
+                var musicStoreContext = externalContext.Ratings
+                    .Include(r => r.Track)
+                    .ThenInclude(a => a.Albums);
+
+                var albumContext = externalContext.Albums
+                    .Include(t => t.Tracks)
+                    .ToList();
+
+
+                foreach (var item in musicStoreContext)
+                {
+                    var trackRatingList = externalContext.Ratings
+                        .Where(r => r.TrackID == item.TrackID)
+                        .Select(s => s.RatingValue)
+                        .ToList();
+
+                    item.Track.TrackRating = trackRatingList.Average();
+                }
+
+
+                foreach (var album in albumContext)
+                {
+                    Console.WriteLine(album.AlbumTitle);
+
+                    if (album.Tracks != null)
+                    {
+                        List<double?> trackArray = new List<double?> { };
+                        foreach (var track in album.Tracks)
+                        {
+                            trackArray.Add(track.TrackRating);
+                            Console.WriteLine(track.TrackRating);
+                        }
+                        Console.WriteLine(trackArray.Average());
+                        album.AlbumRating = trackArray.Average();
+
+                    }
+
+                }
         }
 
         private bool RatingExists(int id)

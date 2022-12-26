@@ -94,9 +94,14 @@ namespace AspMusicStore.Data
             {
                 new Rating{ RatingValue= 1, TrackID= 1 },
                 new Rating{ RatingValue= 2, TrackID= 1 },
-                new Rating{ RatingValue= 3, TrackID= 1 },
+                new Rating{ RatingValue= 4, TrackID= 3 },
+                new Rating{ RatingValue= 2, TrackID= 4 },
+                new Rating{ RatingValue= 3, TrackID= 2 },
+                new Rating{ RatingValue= 1, TrackID= 5 },
+                new Rating{ RatingValue= 2, TrackID= 6 },
+                new Rating{ RatingValue= 3, TrackID= 3 },
                 new Rating{ RatingValue= 2, TrackID= 2 },
-                new Rating{ RatingValue= 5, TrackID= 1 },
+                new Rating{ RatingValue= 1, TrackID= 3 },
             };
             foreach (Rating r in ratings) 
             {
@@ -106,25 +111,31 @@ namespace AspMusicStore.Data
             context.SaveChanges();
 
             
-            ICollection<Track> trackList = new List<Track> {
+            ICollection<Track> trackList1 = new List<Track> {
                 context.Tracks.FirstOrDefault(t => t.TrackID == 1),
                 context.Tracks.FirstOrDefault(t => t.TrackID == 2),
-                context.Tracks.FirstOrDefault(t => t.TrackID == 3)
+                context.Tracks.FirstOrDefault(t => t.TrackID == 3),
+            };
+            ICollection<Track> trackList2 = new List<Track> {
+                context.Tracks.FirstOrDefault(t => t.TrackID == 4),
+                context.Tracks.FirstOrDefault(t => t.TrackID == 5),
+                context.Tracks.FirstOrDefault(t => t.TrackID == 6),
             };
 
             ICollection<AudioStorage> audioStorageList = new List<AudioStorage> {
                 context.AudioStorages.FirstOrDefault(a => a.AudioStorageID == 1),
                 context.AudioStorages.FirstOrDefault(a => a.AudioStorageID == 2),
-                context.AudioStorages.FirstOrDefault(a => a.AudioStorageID == 3)
+                context.AudioStorages.FirstOrDefault(a => a.AudioStorageID == 3),
             };
 
-            context.Albums.Add(new Album { AlbumTitle = "Album Title 5 Full", Description = "Description 5", GenreID = 2, Tracks = trackList, AudioStorages=audioStorageList });
+            context.Albums.Add(new Album { AlbumTitle = "Album Title 5 Full", Description = "Description 5", GenreID = 2, Tracks = trackList1, AudioStorages=audioStorageList });
+            context.Albums.Add(new Album { AlbumTitle = "Album Title 6 Full", Description = "Description 6", GenreID = 2, Tracks = trackList2, AudioStorages = audioStorageList });
             context.SaveChanges();
 
             ICollection<Musician> musicianList = new List<Musician> {
                 context.Musicians.FirstOrDefault(a => a.MusicianID == 1),
                 context.Musicians.FirstOrDefault(a => a.MusicianID == 2),
-                context.Musicians.FirstOrDefault(a => a.MusicianID == 3)
+                context.Musicians.FirstOrDefault(a => a.MusicianID == 3),
             };
 
             context.Tracks.Add(new Track { TrackTitle = "Track Title 7 Full", Musicians = musicianList } );

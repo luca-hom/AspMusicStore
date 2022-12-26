@@ -160,6 +160,14 @@ namespace AspMusicStore.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public async Task<IActionResult> Analytics()
+        {
+            RatingsController.CalculateRatings(_context);
+            var musicStoreContext = _context.Albums;
+
+            return View(await musicStoreContext.ToListAsync());
+        }
+
         private bool AlbumExists(int id)
         {
           return _context.Albums.Any(e => e.AlbumID == id);
