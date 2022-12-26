@@ -49,6 +49,8 @@ namespace AspMusicStore.Controllers
         public IActionResult Create()
         {
             ViewData["GenreID"] = new SelectList(_context.Genres, "GenreID", "GenreName");
+            ViewData["AudioStorageIDs"] = new SelectList(_context.AudioStorages, "AudioStorageID", "AudioStorageName");
+            ViewData["TrackIDs"] = new SelectList(_context.Tracks, "TrackID", "TrackTitle");
             return View();
         }
 
@@ -57,7 +59,7 @@ namespace AspMusicStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AlbumTitle,Description,GenreID")] Album album)
+        public async Task<IActionResult> Create([Bind("AlbumTitle,Description,GenreID, MusicianID, AudioStorageID, TrackID")] Album album)
         {
             if (ModelState.IsValid)
             {
@@ -66,6 +68,8 @@ namespace AspMusicStore.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["GenreID"] = new SelectList(_context.Genres, "GenreID", "GenreID", album.GenreID);
+            ViewData["AudioStorageIDs"] = new SelectList(_context.AudioStorages, "AudioStorageID", "AudioStorageName");
+            ViewData["TrackIDs"] = new SelectList(_context.Tracks, "TrackID", "TrackIDName");
             return View(album);
         }
 

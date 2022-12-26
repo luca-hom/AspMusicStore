@@ -27,6 +27,14 @@
                 <select asp-for="GenreID" class ="form-control" asp-items="ViewBag.GenreID"></select>
             </div>
             <div class="form-group">
+                <label asp-for="AudioStorages" class="control-label"></label>
+                <select asp-for="AudioStorages" class="form-control" asp-items="ViewBag.AudioStorageIDs"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Tracks" class="control-label"></label>
+                <select asp-for="Tracks" class="form-control" asp-items="ViewBag.TrackIDs"></select>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>

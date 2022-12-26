@@ -10,87 +10,85 @@ using AspMusicStore.Models;
 
 namespace AspMusicStore.Controllers
 {
-    public class TracksController : Controller
+    public class AudioStoragesController : Controller
     {
         private readonly MusicStoreContext _context;
 
-        public TracksController(MusicStoreContext context)
+        public AudioStoragesController(MusicStoreContext context)
         {
             _context = context;
         }
 
-        // GET: Tracks
+        // GET: AudioStorages
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Tracks.ToListAsync());
+              return View(await _context.AudioStorages.ToListAsync());
         }
 
-        // GET: Tracks/Details/5
+        // GET: AudioStorages/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Tracks == null)
+            if (id == null || _context.AudioStorages == null)
             {
                 return NotFound();
             }
 
-            var track = await _context.Tracks
-                .FirstOrDefaultAsync(m => m.TrackID == id);
-            if (track == null)
+            var audioStorage = await _context.AudioStorages
+                .FirstOrDefaultAsync(m => m.AudioStorageID == id);
+            if (audioStorage == null)
             {
                 return NotFound();
             }
 
-            return View(track);
+            return View(audioStorage);
         }
 
-        // GET: Tracks/Create
+        // GET: AudioStorages/Create
         public IActionResult Create()
         {
-            ViewData["MusicianIDs"] = new SelectList(_context.Musicians, "MusicianID", "MusicianName");
             return View();
         }
 
-        // POST: Tracks/Create
+        // POST: AudioStorages/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TrackID,TrackTitle,TrackLyrics,Duration,MusicianID")] Track track)
+        public async Task<IActionResult> Create([Bind("AudioStorageID,AudioStorageName")] AudioStorage audioStorage)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(track);
+                _context.Add(audioStorage);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MusicianIDs"] = new SelectList(_context.Musicians, "MusicianID", "MusicianName");
-            return View(track);
+            return View(audioStorage);
         }
 
-        // GET: Tracks/Edit/5
+        // GET: AudioStorages/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Tracks == null)
+            if (id == null || _context.AudioStorages == null)
             {
                 return NotFound();
             }
 
-            var track = await _context.Tracks.FindAsync(id);
-            if (track == null)
+            var audioStorage = await _context.AudioStorages.FindAsync(id);
+            if (audioStorage == null)
             {
                 return NotFound();
             }
-            return View(track);
+            return View(audioStorage);
         }
 
-        // POST: Tracks/Edit/5
+        // POST: AudioStorages/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("TrackID,TrackTitle,TrackLyrics,Duration")] Track track)
+        public async Task<IActionResult> Edit(int id, [Bind("AudioStorageID,AudioStorageName")] AudioStorage audioStorage)
         {
-            if (id != track.TrackID)
+            if (id != audioStorage.AudioStorageID)
             {
                 return NotFound();
             }
@@ -99,12 +97,12 @@ namespace AspMusicStore.Controllers
             {
                 try
                 {
-                    _context.Update(track);
+                    _context.Update(audioStorage);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TrackExists(track.TrackID))
+                    if (!AudioStorageExists(audioStorage.AudioStorageID))
                     {
                         return NotFound();
                     }
@@ -115,49 +113,49 @@ namespace AspMusicStore.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(track);
+            return View(audioStorage);
         }
 
-        // GET: Tracks/Delete/5
+        // GET: AudioStorages/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Tracks == null)
+            if (id == null || _context.AudioStorages == null)
             {
                 return NotFound();
             }
 
-            var track = await _context.Tracks
-                .FirstOrDefaultAsync(m => m.TrackID == id);
-            if (track == null)
+            var audioStorage = await _context.AudioStorages
+                .FirstOrDefaultAsync(m => m.AudioStorageID == id);
+            if (audioStorage == null)
             {
                 return NotFound();
             }
 
-            return View(track);
+            return View(audioStorage);
         }
 
-        // POST: Tracks/Delete/5
+        // POST: AudioStorages/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Tracks == null)
+            if (_context.AudioStorages == null)
             {
-                return Problem("Entity set 'MusicStoreContext.Tracks'  is null.");
+                return Problem("Entity set 'MusicStoreContext.AudioStorages'  is null.");
             }
-            var track = await _context.Tracks.FindAsync(id);
-            if (track != null)
+            var audioStorage = await _context.AudioStorages.FindAsync(id);
+            if (audioStorage != null)
             {
-                _context.Tracks.Remove(track);
+                _context.AudioStorages.Remove(audioStorage);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool TrackExists(int id)
+        private bool AudioStorageExists(int id)
         {
-          return _context.Tracks.Any(e => e.TrackID == id);
+          return _context.AudioStorages.Any(e => e.AudioStorageID == id);
         }
     }
 }

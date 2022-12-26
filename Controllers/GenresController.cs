@@ -10,87 +10,85 @@ using AspMusicStore.Models;
 
 namespace AspMusicStore.Controllers
 {
-    public class TracksController : Controller
+    public class GenresController : Controller
     {
         private readonly MusicStoreContext _context;
 
-        public TracksController(MusicStoreContext context)
+        public GenresController(MusicStoreContext context)
         {
             _context = context;
         }
 
-        // GET: Tracks
+        // GET: Genres
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Tracks.ToListAsync());
+              return View(await _context.Genres.ToListAsync());
         }
 
-        // GET: Tracks/Details/5
+        // GET: Genres/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Tracks == null)
+            if (id == null || _context.Genres == null)
             {
                 return NotFound();
             }
 
-            var track = await _context.Tracks
-                .FirstOrDefaultAsync(m => m.TrackID == id);
-            if (track == null)
+            var genre = await _context.Genres
+                .FirstOrDefaultAsync(m => m.GenreID == id);
+            if (genre == null)
             {
                 return NotFound();
             }
 
-            return View(track);
+            return View(genre);
         }
 
-        // GET: Tracks/Create
+        // GET: Genres/Create
         public IActionResult Create()
         {
-            ViewData["MusicianIDs"] = new SelectList(_context.Musicians, "MusicianID", "MusicianName");
             return View();
         }
 
-        // POST: Tracks/Create
+        // POST: Genres/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TrackID,TrackTitle,TrackLyrics,Duration,MusicianID")] Track track)
+        public async Task<IActionResult> Create([Bind("GenreID,GenreName")] Genre genre)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(track);
+                _context.Add(genre);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MusicianIDs"] = new SelectList(_context.Musicians, "MusicianID", "MusicianName");
-            return View(track);
+            return View(genre);
         }
 
-        // GET: Tracks/Edit/5
+        // GET: Genres/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Tracks == null)
+            if (id == null || _context.Genres == null)
             {
                 return NotFound();
             }
 
-            var track = await _context.Tracks.FindAsync(id);
-            if (track == null)
+            var genre = await _context.Genres.FindAsync(id);
+            if (genre == null)
             {
                 return NotFound();
             }
-            return View(track);
+            return View(genre);
         }
 
-        // POST: Tracks/Edit/5
+        // POST: Genres/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("TrackID,TrackTitle,TrackLyrics,Duration")] Track track)
+        public async Task<IActionResult> Edit(int id, [Bind("GenreID,GenreName")] Genre genre)
         {
-            if (id != track.TrackID)
+            if (id != genre.GenreID)
             {
                 return NotFound();
             }
@@ -99,12 +97,12 @@ namespace AspMusicStore.Controllers
             {
                 try
                 {
-                    _context.Update(track);
+                    _context.Update(genre);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TrackExists(track.TrackID))
+                    if (!GenreExists(genre.GenreID))
                     {
                         return NotFound();
                     }
@@ -115,49 +113,49 @@ namespace AspMusicStore.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(track);
+            return View(genre);
         }
 
-        // GET: Tracks/Delete/5
+        // GET: Genres/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Tracks == null)
+            if (id == null || _context.Genres == null)
             {
                 return NotFound();
             }
 
-            var track = await _context.Tracks
-                .FirstOrDefaultAsync(m => m.TrackID == id);
-            if (track == null)
+            var genre = await _context.Genres
+                .FirstOrDefaultAsync(m => m.GenreID == id);
+            if (genre == null)
             {
                 return NotFound();
             }
 
-            return View(track);
+            return View(genre);
         }
 
-        // POST: Tracks/Delete/5
+        // POST: Genres/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Tracks == null)
+            if (_context.Genres == null)
             {
-                return Problem("Entity set 'MusicStoreContext.Tracks'  is null.");
+                return Problem("Entity set 'MusicStoreContext.Genres'  is null.");
             }
-            var track = await _context.Tracks.FindAsync(id);
-            if (track != null)
+            var genre = await _context.Genres.FindAsync(id);
+            if (genre != null)
             {
-                _context.Tracks.Remove(track);
+                _context.Genres.Remove(genre);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool TrackExists(int id)
+        private bool GenreExists(int id)
         {
-          return _context.Tracks.Any(e => e.TrackID == id);
+          return _context.Genres.Any(e => e.GenreID == id);
         }
     }
 }

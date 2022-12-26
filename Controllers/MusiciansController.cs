@@ -10,87 +10,85 @@ using AspMusicStore.Models;
 
 namespace AspMusicStore.Controllers
 {
-    public class TracksController : Controller
+    public class MusiciansController : Controller
     {
         private readonly MusicStoreContext _context;
 
-        public TracksController(MusicStoreContext context)
+        public MusiciansController(MusicStoreContext context)
         {
             _context = context;
         }
 
-        // GET: Tracks
+        // GET: Musicians
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Tracks.ToListAsync());
+              return View(await _context.Musicians.ToListAsync());
         }
 
-        // GET: Tracks/Details/5
+        // GET: Musicians/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Tracks == null)
+            if (id == null || _context.Musicians == null)
             {
                 return NotFound();
             }
 
-            var track = await _context.Tracks
-                .FirstOrDefaultAsync(m => m.TrackID == id);
-            if (track == null)
+            var musician = await _context.Musicians
+                .FirstOrDefaultAsync(m => m.MusicianID == id);
+            if (musician == null)
             {
                 return NotFound();
             }
 
-            return View(track);
+            return View(musician);
         }
 
-        // GET: Tracks/Create
+        // GET: Musicians/Create
         public IActionResult Create()
         {
-            ViewData["MusicianIDs"] = new SelectList(_context.Musicians, "MusicianID", "MusicianName");
             return View();
         }
 
-        // POST: Tracks/Create
+        // POST: Musicians/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TrackID,TrackTitle,TrackLyrics,Duration,MusicianID")] Track track)
+        public async Task<IActionResult> Create([Bind("MusicianID,MusicianName")] Musician musician)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(track);
+                _context.Add(musician);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MusicianIDs"] = new SelectList(_context.Musicians, "MusicianID", "MusicianName");
-            return View(track);
+            return View(musician);
         }
 
-        // GET: Tracks/Edit/5
+        // GET: Musicians/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Tracks == null)
+            if (id == null || _context.Musicians == null)
             {
                 return NotFound();
             }
 
-            var track = await _context.Tracks.FindAsync(id);
-            if (track == null)
+            var musician = await _context.Musicians.FindAsync(id);
+            if (musician == null)
             {
                 return NotFound();
             }
-            return View(track);
+            return View(musician);
         }
 
-        // POST: Tracks/Edit/5
+        // POST: Musicians/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("TrackID,TrackTitle,TrackLyrics,Duration")] Track track)
+        public async Task<IActionResult> Edit(int id, [Bind("MusicianID,MusicianName")] Musician musician)
         {
-            if (id != track.TrackID)
+            if (id != musician.MusicianID)
             {
                 return NotFound();
             }
@@ -99,12 +97,12 @@ namespace AspMusicStore.Controllers
             {
                 try
                 {
-                    _context.Update(track);
+                    _context.Update(musician);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TrackExists(track.TrackID))
+                    if (!MusicianExists(musician.MusicianID))
                     {
                         return NotFound();
                     }
@@ -115,49 +113,49 @@ namespace AspMusicStore.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(track);
+            return View(musician);
         }
 
-        // GET: Tracks/Delete/5
+        // GET: Musicians/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Tracks == null)
+            if (id == null || _context.Musicians == null)
             {
                 return NotFound();
             }
 
-            var track = await _context.Tracks
-                .FirstOrDefaultAsync(m => m.TrackID == id);
-            if (track == null)
+            var musician = await _context.Musicians
+                .FirstOrDefaultAsync(m => m.MusicianID == id);
+            if (musician == null)
             {
                 return NotFound();
             }
 
-            return View(track);
+            return View(musician);
         }
 
-        // POST: Tracks/Delete/5
+        // POST: Musicians/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Tracks == null)
+            if (_context.Musicians == null)
             {
-                return Problem("Entity set 'MusicStoreContext.Tracks'  is null.");
+                return Problem("Entity set 'MusicStoreContext.Musicians'  is null.");
             }
-            var track = await _context.Tracks.FindAsync(id);
-            if (track != null)
+            var musician = await _context.Musicians.FindAsync(id);
+            if (musician != null)
             {
-                _context.Tracks.Remove(track);
+                _context.Musicians.Remove(musician);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool TrackExists(int id)
+        private bool MusicianExists(int id)
         {
-          return _context.Tracks.Any(e => e.TrackID == id);
+          return _context.Musicians.Any(e => e.MusicianID == id);
         }
     }
 }
