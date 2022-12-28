@@ -20,13 +20,22 @@
             @Html.DisplayNameFor(model => model.TrackLyrics)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TrackLyrics)
+            <textarea readonly>@Model.TrackLyrics</textarea>
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Duration)
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Duration)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Musicians)
+        </dt>
+        <dd class="col-sm-10">
+            @foreach (var musician in Model.Musicians)
+            {
+                <text>@musician.MusicianName</text> <br />
+            }
         </dd>
     </dl>
 </div>

@@ -20,7 +20,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="TrackLyrics" class="control-label"></label>
-                <input asp-for="TrackLyrics" class="form-control" />
+                <textarea asp-for="TrackLyrics" class="form-control" />@Model.TrackLyrics</textarea>
                 <span asp-validation-for="TrackLyrics" class="text-danger"></span>
             </div>
             <div class="form-group">

@@ -34,6 +34,7 @@ namespace AspMusicStore.Controllers
             }
 
             var track = await _context.Tracks
+                .Include(t => t.Musicians)
                 .FirstOrDefaultAsync(m => m.TrackID == id);
             if (track == null)
             {

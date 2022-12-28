@@ -36,6 +36,8 @@ namespace AspMusicStore.Controllers
 
             var album = await _context.Albums
                 .Include(a => a.Genre)
+                .Include(a => a.AudioStorages)
+                .Include(a => a.Tracks)
                 .FirstOrDefaultAsync(m => m.AlbumID == id);
             if (album == null)
             {
@@ -111,7 +113,10 @@ namespace AspMusicStore.Controllers
             {
                 return NotFound();
             }
-            await DeleteAudioStoragesTracksFromAlbum(album);
+            await DeleteAudioStoragesFromAlbum(album);
+            _context.ChangeTracker.Clear();
+            await DeleteTracksFromAlbum(album);
+            _context.ChangeTracker.Clear();
             AddAudioStoragesToAlbum(album, selectedAudioStorages);
             AddTracksToAlbum(album, selectedTracks);
             
@@ -230,10 +235,9 @@ namespace AspMusicStore.Controllers
             }
         }
 
-        private async Task DeleteAudioStoragesTracksFromAlbum(Album album)
+        private async Task DeleteAudioStoragesFromAlbum(Album album)
         {
             var dbAlbum = this._context.Albums.Include(a => a.AudioStorages)
-                .Include(a => a.Tracks)
                 .SingleOrDefault(a => a.AlbumID == album.AlbumID);
 
             if (dbAlbum.AudioStorages != null)
@@ -242,14 +246,19 @@ namespace AspMusicStore.Controllers
                 await _context.SaveChangesAsync();
             }
 
+
+
+        }
+        private async Task DeleteTracksFromAlbum(Album album)
+        {
+            var dbAlbum = this._context.Albums.Include(a => a.Tracks)
+                .SingleOrDefault(a => a.AlbumID == album.AlbumID);
+
             if (dbAlbum.Tracks != null)
             {
-                _context.ChangeTracker.Clear();
                 dbAlbum.Tracks.Clear();
                 await _context.SaveChangesAsync();
             }
-
-
         }
     }
 }
