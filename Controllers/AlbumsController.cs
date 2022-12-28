@@ -59,17 +59,22 @@ namespace AspMusicStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AlbumTitle,Description,GenreID, MusicianID, AudioStorageID, TrackID")] Album album)
+        public async Task<IActionResult> Create([Bind("AlbumTitle,Description,GenreID,AudioStorages,Tracks")] Album album)
         {
+
+
+            ViewData["GenreID"] = new SelectList(_context.Genres, "GenreID", "GenreID", album.GenreID);
+            ViewData["AudioStorageIDs"] = new SelectList(_context.AudioStorages, "AudioStorageID", "AudioStorageID", album.AudioStorages);
+            ViewData["TrackIDs"] = new SelectList(_context.Tracks, "TrackID", "TrackID", album.Tracks);
+
             if (ModelState.IsValid)
             {
                 _context.Add(album);
                 await _context.SaveChangesAsync();
+                Console.WriteLine(album.Tracks.Count);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["GenreID"] = new SelectList(_context.Genres, "GenreID", "GenreID", album.GenreID);
-            ViewData["AudioStorageIDs"] = new SelectList(_context.AudioStorages, "AudioStorageID", "AudioStorageName");
-            ViewData["TrackIDs"] = new SelectList(_context.Tracks, "TrackID", "TrackIDName");
+            
             return View(album);
         }
 
@@ -95,7 +100,7 @@ namespace AspMusicStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("AlbumTitle,Description,GenreID")] Album album)
+        public async Task<IActionResult> Edit(int id, [Bind("AlbumTitle,Description,GenreID, MusicianID, AudioStorageID, TrackID")] Album album)
         {
             if (id != album.AlbumID)
             {

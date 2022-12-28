@@ -46,7 +46,7 @@ namespace AspMusicStore.Controllers
         // GET: Tracks/Create
         public IActionResult Create()
         {
-            ViewData["MusicianIDs"] = new SelectList(_context.Musicians, "MusicianID", "MusicianName");
+            ViewData["MusicianIDs"] = new MultiSelectList(_context.Musicians, "MusicianID", "MusicianName");
             return View();
         }
 
@@ -55,21 +55,40 @@ namespace AspMusicStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TrackID,TrackTitle,TrackLyrics,Duration,MusicianID")] Track track)
+        public async Task<IActionResult> Create([Bind("TrackID,TrackTitle,TrackLyrics,Duration,MusicianID")] Track track, List<int> selectedMusicians)
         {
+            ViewData["MusicianIDs"] = new MultiSelectList(_context.Musicians, "MusicianID", "MusicianName", track.SelectedMusicians);
+
+            if (selectedMusicians != null)
+            {
+                track.Musicians = new List<Musician>();
+
+                foreach(var musician in selectedMusicians)
+                {
+                    track.Musicians.Add(_context.Musicians.FirstOrDefault(m => m.MusicianID == musician));
+                    Console.WriteLine(musician);
+                }
+            }
+            else
+            {
+                Console.WriteLine("no selected Musicians");
+            }
+
             if (ModelState.IsValid)
             {
+                Console.WriteLine("Valid Model");
                 _context.Add(track);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MusicianIDs"] = new SelectList(_context.Musicians, "MusicianID", "MusicianName");
+            
             return View(track);
         }
 
         // GET: Tracks/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+
             if (id == null || _context.Tracks == null)
             {
                 return NotFound();
@@ -80,6 +99,8 @@ namespace AspMusicStore.Controllers
             {
                 return NotFound();
             }
+            ViewData["MusicianIDs"] = new MultiSelectList(_context.Musicians, "MusicianID", "MusicianName");
+
             return View(track);
         }
 
@@ -88,11 +109,26 @@ namespace AspMusicStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("TrackID,TrackTitle,TrackLyrics,Duration")] Track track)
+        public async Task<IActionResult> Edit(int id, [Bind("TrackID,TrackTitle,TrackLyrics,Duration")] Track track, List<int> selectedMusicians)
         {
             if (id != track.TrackID)
             {
                 return NotFound();
+            }
+
+            if (selectedMusicians != null)
+            {
+                track.Musicians = new List<Musician>();
+
+                foreach (var musician in selectedMusicians)
+                {
+                    track.Musicians.Add(_context.Musicians.FirstOrDefault(m => m.MusicianID == musician));
+                    Console.WriteLine(musician);
+                }
+            }
+            else
+            {
+                Console.WriteLine("no selected Musicians");
             }
 
             if (ModelState.IsValid)

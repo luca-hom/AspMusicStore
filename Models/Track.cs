@@ -10,7 +10,9 @@ namespace AspMusicStore.Models
         public string? TrackLyrics { get; set; }
         public int? Duration { get; set; }
         [NotMapped]
-        public double? TrackRating { get; set; } 
+        public double? TrackRating { get; set; }
+        [NotMapped]
+        public List<int>? SelectedMusicians { get; set; }
 
         //Navigation properties
         public ICollection<Album> Albums { get; set; }
