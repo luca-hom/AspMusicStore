@@ -59,20 +59,7 @@ namespace AspMusicStore.Controllers
         {
             ViewData["MusicianIDs"] = new MultiSelectList(_context.Musicians, "MusicianID", "MusicianName", track.SelectedMusicians);
 
-            if (selectedMusicians != null)
-            {
-                track.Musicians = new List<Musician>();
-
-                foreach(var musician in selectedMusicians)
-                {
-                    track.Musicians.Add(_context.Musicians.FirstOrDefault(m => m.MusicianID == musician));
-                    Console.WriteLine(musician);
-                }
-            }
-            else
-            {
-                Console.WriteLine("no selected Musicians");
-            }
+            AddMusiciansToTrack(track, selectedMusicians);
 
             if (ModelState.IsValid)
             {
@@ -116,25 +103,15 @@ namespace AspMusicStore.Controllers
                 return NotFound();
             }
 
-            if (selectedMusicians != null)
-            {
-                track.Musicians = new List<Musician>();
+            await DeleteMusiciansFromTrack(track);
+            AddMusiciansToTrack(track, selectedMusicians);
 
-                foreach (var musician in selectedMusicians)
-                {
-                    track.Musicians.Add(_context.Musicians.FirstOrDefault(m => m.MusicianID == musician));
-                    Console.WriteLine(musician);
-                }
-            }
-            else
-            {
-                Console.WriteLine("no selected Musicians");
-            }
 
             if (ModelState.IsValid)
             {
                 try
                 {
+                    _context.ChangeTracker.Clear();
                     _context.Update(track);
                     await _context.SaveChangesAsync();
                 }
@@ -194,6 +171,38 @@ namespace AspMusicStore.Controllers
         private bool TrackExists(int id)
         {
           return _context.Tracks.Any(e => e.TrackID == id);
+        }
+
+        private void AddMusiciansToTrack (Track track, List<int> selectedMusicians)
+        {
+            if (selectedMusicians != null)
+            {
+
+                track.Musicians = new List<Musician>();
+
+                foreach (var musician in selectedMusicians)
+                {
+                    track.Musicians.Add(_context.Musicians.FirstOrDefault(m => m.MusicianID == musician));
+                    Console.WriteLine(musician);
+                }
+            }
+            else
+            {
+                Console.WriteLine("no selected Musicians");
+            }
+        }
+
+
+        private async Task DeleteMusiciansFromTrack (Track track)
+        {
+            var dbTrack = this._context.Tracks.Include(m => m.Musicians)
+                .SingleOrDefault(t => t.TrackID == track.TrackID);
+
+            if (dbTrack.Musicians != null) {
+                dbTrack.Musicians.Clear();
+                await _context.SaveChangesAsync();
+            }
+ 
         }
     }
 }

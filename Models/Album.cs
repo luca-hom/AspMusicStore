@@ -15,6 +15,10 @@ namespace AspMusicStore.Models
         public string GenreName { get; set; }
         [NotMapped]
         public double? AlbumRating { get; set; }
+        [NotMapped]
+        public List<int>? SelectedAudioStorages { get; set; }
+        [NotMapped]
+        public List<int>? SelectedTracks { get; set; }
 
         //Navigation Properties
         public Genre Genre { get; set; }

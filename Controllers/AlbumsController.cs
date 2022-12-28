@@ -59,19 +59,20 @@ namespace AspMusicStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AlbumTitle,Description,GenreID,AudioStorages,Tracks")] Album album)
+        public async Task<IActionResult> Create([Bind("AlbumTitle,Description,GenreID,AudioStorages,Tracks")] Album album, List<int> selectedAudioStorages, List<int> selectedTracks)
         {
-
 
             ViewData["GenreID"] = new SelectList(_context.Genres, "GenreID", "GenreID", album.GenreID);
             ViewData["AudioStorageIDs"] = new SelectList(_context.AudioStorages, "AudioStorageID", "AudioStorageID", album.AudioStorages);
             ViewData["TrackIDs"] = new SelectList(_context.Tracks, "TrackID", "TrackID", album.Tracks);
 
+            AddAudioStoragesToAlbum(album, selectedAudioStorages);
+            AddTracksToAlbum(album, selectedTracks);
+
             if (ModelState.IsValid)
             {
                 _context.Add(album);
                 await _context.SaveChangesAsync();
-                Console.WriteLine(album.Tracks.Count);
                 return RedirectToAction(nameof(Index));
             }
             
@@ -91,7 +92,10 @@ namespace AspMusicStore.Controllers
             {
                 return NotFound();
             }
+
             ViewData["GenreID"] = new SelectList(_context.Genres, "GenreID", "GenreID", album.GenreID);
+            ViewData["AudioStorageIDs"] = new SelectList(_context.AudioStorages, "AudioStorageID", "AudioStorageName");
+            ViewData["TrackIDs"] = new SelectList(_context.Tracks, "TrackID", "TrackTitle");
             return View(album);
         }
 
@@ -100,17 +104,23 @@ namespace AspMusicStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("AlbumTitle,Description,GenreID, MusicianID, AudioStorageID, TrackID")] Album album)
+        public async Task<IActionResult> Edit(int id, [Bind("AlbumID,AlbumTitle,Description,GenreID, MusicianID, AudioStorageID, TrackID")] Album album, List<int> selectedAudioStorages, List<int> selectedTracks)
         {
+            ViewData["GenreID"] = new SelectList(_context.Genres, "GenreID", "GenreID", album.GenreID);
             if (id != album.AlbumID)
             {
                 return NotFound();
             }
+            await DeleteAudioStoragesTracksFromAlbum(album);
+            AddAudioStoragesToAlbum(album, selectedAudioStorages);
+            AddTracksToAlbum(album, selectedTracks);
+            
 
             if (ModelState.IsValid)
             {
                 try
                 {
+                    _context.ChangeTracker.Clear();
                     _context.Update(album);
                     await _context.SaveChangesAsync();
                 }
@@ -125,9 +135,9 @@ namespace AspMusicStore.Controllers
                         throw;
                     }
                 }
+                
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["GenreID"] = new SelectList(_context.Genres, "GenreID", "GenreID", album.GenreID);
             return View(album);
         }
 
@@ -180,6 +190,66 @@ namespace AspMusicStore.Controllers
         private bool AlbumExists(int id)
         {
           return _context.Albums.Any(e => e.AlbumID == id);
+        }
+
+        private void AddAudioStoragesToAlbum(Album album,List<int> selectedAudioStorages)
+        {
+            if (selectedAudioStorages != null)
+            {
+                album.AudioStorages = null;
+                _context.Update(album);
+                album.AudioStorages = new List<AudioStorage>();
+                
+                foreach (var audioStorage in selectedAudioStorages)
+                {
+                    album.AudioStorages.Add(_context.AudioStorages.FirstOrDefault(a => a.AudioStorageID == audioStorage));
+                    Console.WriteLine(audioStorage);
+                }
+            }
+            else
+            {
+                Console.WriteLine("no selected AudioStorage");
+            }
+        }
+
+        private void AddTracksToAlbum(Album album, List<int> selectedTracks)
+        {
+            if (selectedTracks != null)
+            {
+                album.Tracks = new List<Track>();
+
+                foreach (var track in selectedTracks)
+                {
+                    album.Tracks.Add(_context.Tracks.FirstOrDefault(t => t.TrackID == track));
+                    Console.WriteLine(track);
+                }
+            }
+            else
+            {
+                Console.WriteLine("no selected Tracks");
+            }
+        }
+
+        private async Task DeleteAudioStoragesTracksFromAlbum(Album album)
+        {
+            var dbAlbum = this._context.Albums.Include(a => a.AudioStorages)
+                .Include(a => a.Tracks)
+                .SingleOrDefault(a => a.AlbumID == album.AlbumID);
+
+            if (dbAlbum.AudioStorages != null)
+            {
+                dbAlbum.AudioStorages.Clear();
+                await _context.SaveChangesAsync();
+            }
+
+            if (dbAlbum.Tracks != null)
+            {
+                _context.ChangeTracker.Clear();
+                dbAlbum.Tracks.Clear();
+                await _context.SaveChangesAsync();
+            }
+
+
         }
     }
 }
