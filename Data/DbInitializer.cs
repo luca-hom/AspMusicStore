@@ -17,9 +17,9 @@ namespace AspMusicStore.Data
 
             var genres = new Genre[]
             {
-                new Genre{GenreName="Genre 1"},
-                new Genre{GenreName="Genre 2"},
-                new Genre{GenreName="Genre 3"},
+                new Genre{GenreName="Rock"},
+                new Genre{GenreName="Techno"},
+                new Genre{GenreName="Metal"},
             };
             foreach (Genre g in genres)
             {
@@ -31,10 +31,8 @@ namespace AspMusicStore.Data
 
             var albums = new Album[]
             {
-                new Album{ AlbumTitle="Album Title 1", Description="Description 1", GenreID=1 },
-                new Album{ AlbumTitle="Album Title 2", Description="Description 2", GenreID=2 },
-                new Album{ AlbumTitle="Album Title 3", Description="Description 3", GenreID=1 },
-                new Album{ AlbumTitle="Album Title 4", Description="Description 4", GenreID=2,}
+                new Album{ AlbumTitle="Album Title 1", Description="This is an empty Album", GenreID=1 },
+                new Album{ AlbumTitle="Album Title 2", Description="This is an empty Album", GenreID=2 }
             };
             foreach (Album a in albums)
             {
@@ -74,12 +72,12 @@ namespace AspMusicStore.Data
             
             var tracks = new Track[]
             {
-                new Track{ TrackTitle="Track Title 1"},
-                new Track{ TrackTitle="Track Title 2"},
-                new Track{ TrackTitle="Track Title 3"},
-                new Track{ TrackTitle="Track Title 4"},
-                new Track{ TrackTitle="Track Title 5"},
-                new Track{ TrackTitle="Track Title 6"},
+                new Track{ TrackTitle="Track Title 1" },
+                new Track{ TrackTitle="Track Title 2" },
+                new Track{ TrackTitle="Track Title 3" },
+                new Track{ TrackTitle="Track Title 4" },
+                new Track{ TrackTitle="Track Title 5" },
+                new Track{ TrackTitle="Track Title 6" },
 
             };
             foreach (Track tr in tracks) 
@@ -128,8 +126,8 @@ namespace AspMusicStore.Data
                 context.AudioStorages.FirstOrDefault(a => a.AudioStorageID == 3),
             };
 
-            context.Albums.Add(new Album { AlbumTitle = "Album Title 5 Full", Description = "Description 5", GenreID = 2, Tracks = trackList1, AudioStorages=audioStorageList });
-            context.Albums.Add(new Album { AlbumTitle = "Album Title 6 Full", Description = "Description 6", GenreID = 2, Tracks = trackList2, AudioStorages = audioStorageList });
+            context.Albums.Add(new Album { AlbumTitle = "Album Title 3", Description = "This is a full Album", GenreID = 2, Tracks = trackList1, AudioStorages= audioStorageList });
+            context.Albums.Add(new Album { AlbumTitle = "Album Title 4", Description = "This is a full Album", GenreID = 2, Tracks = trackList2, AudioStorages = audioStorageList });
             context.SaveChanges();
 
             ICollection<Musician> musicianList = new List<Musician> {
@@ -138,10 +136,8 @@ namespace AspMusicStore.Data
                 context.Musicians.FirstOrDefault(a => a.MusicianID == 3),
             };
 
-            context.Tracks.Add(new Track { TrackTitle = "Track Title 7 Full", Musicians = musicianList } );
+            context.Tracks.Add(new Track { TrackTitle = "Track Title 7 with Musicians", Musicians = musicianList } );
             context.SaveChanges();
-
-
 
         }
     }
