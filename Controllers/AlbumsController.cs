@@ -89,15 +89,26 @@ namespace AspMusicStore.Controllers
                 return NotFound();
             }
 
-            var album = await _context.Albums.FindAsync(id);
+            var album = await _context.Albums
+                .Include(a => a.AudioStorages)
+                .Include(a => a.Tracks)
+                .FirstOrDefaultAsync(i => i.AlbumID == id);
             if (album == null)
             {
                 return NotFound();
             }
+            foreach (var item in album.Tracks)
+            {
+                Console.WriteLine(item.TrackTitle);
+            }
+            foreach (var item in album.AudioStorages)
+            {
+                Console.WriteLine(item.AudioStorageName);
+            }
 
             ViewData["GenreID"] = new SelectList(_context.Genres, "GenreID", "GenreID", album.GenreID);
-            ViewData["AudioStorageIDs"] = new SelectList(_context.AudioStorages, "AudioStorageID", "AudioStorageName");
-            ViewData["TrackIDs"] = new SelectList(_context.Tracks, "TrackID", "TrackTitle");
+            ViewData["AudioStorageIDs"] = new SelectList(_context.AudioStorages, "AudioStorageID", "AudioStorageName", album.AudioStorages.Select(a => a.AudioStorageID).ToArray());
+            ViewData["TrackIDs"] = new SelectList(_context.Tracks, "TrackID", "TrackTitle", album.Tracks.Select(a => a.TrackID).ToArray());
             return View(album);
         }
 
@@ -106,7 +117,7 @@ namespace AspMusicStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("AlbumID,AlbumTitle,Description,GenreID, MusicianID, AudioStorageID, TrackID")] Album album, List<int> selectedAudioStorages, List<int> selectedTracks)
+        public async Task<IActionResult> Edit(int id, [Bind("AlbumID,AlbumTitle,Description,GenreID")] Album album, List<int> selectedAudioStorages, List<int> selectedTracks)
         {
             ViewData["GenreID"] = new SelectList(_context.Genres, "GenreID", "GenreID", album.GenreID);
             if (id != album.AlbumID)

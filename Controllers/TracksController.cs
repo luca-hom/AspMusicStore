@@ -82,12 +82,15 @@ namespace AspMusicStore.Controllers
                 return NotFound();
             }
 
-            var track = await _context.Tracks.FindAsync(id);
+            var track = await _context.Tracks
+                .Include(m => m.Musicians)
+                .FirstOrDefaultAsync(i => i.TrackID == id);
             if (track == null)
             {
                 return NotFound();
             }
-            ViewData["MusicianIDs"] = new MultiSelectList(_context.Musicians, "MusicianID", "MusicianName");
+            
+            ViewData["MusicianIDs"] = new MultiSelectList(_context.Musicians, "MusicianID", "MusicianName", track.Musicians.Select(t => t.MusicianID).ToArray());
 
             return View(track);
         }
