@@ -106,7 +106,7 @@ namespace AspMusicStore.Controllers
                 Console.WriteLine(item.AudioStorageName);
             }
 
-            ViewData["GenreID"] = new SelectList(_context.Genres, "GenreID", "GenreID", album.GenreID);
+            ViewData["GenreID"] = new SelectList(_context.Genres, "GenreID", "GenreName", album.GenreID);
             ViewData["AudioStorageIDs"] = new SelectList(_context.AudioStorages, "AudioStorageID", "AudioStorageName", album.AudioStorages.Select(a => a.AudioStorageID).ToArray());
             ViewData["TrackIDs"] = new SelectList(_context.Tracks, "TrackID", "TrackTitle", album.Tracks.Select(a => a.TrackID).ToArray());
             return View(album);
