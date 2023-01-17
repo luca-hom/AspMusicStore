@@ -12,9 +12,14 @@ namespace AspMusicStore.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync()
         {
-            return View();
+            var musicStoreContext = _context.Albums
+                .Include(a => a.Genre)
+                .Include(a => a.Tracks)
+                .ThenInclude(t => t.Musicians);
+
+            return View(await musicStoreContext.ToListAsync());
         }
 
         public async Task<IActionResult> AlbumAnalyticsAsync()

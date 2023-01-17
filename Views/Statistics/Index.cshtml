@@ -1,5 +1,43 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IEnumerable<AspMusicStore.Models.Album>
+
 @{
+    ViewData["Title"] = "Statistics";
 }
+
+<h1>Statistics</h1>
+
+<form asp-controller="Statistics" asp-action="TrackAnalytics"><button style="padding:50px">Track Analytics</button></form>
+<form asp-controller="Statistics" asp-action="AlbumAnalytics"><button style="padding:50px">Album Analytics</button></form>
+
+@*
+    STATISTIC INDEX
+*@
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    google.charts.load("current", { packages: ["corechart"] });
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+            ['Genre Name', 'Albums per Genre'],
+    @foreach (var item in Model.DistinctBy(x => x.GenreID))
+    {
+        <text>
+                ['@item.Genre.GenreName', @Model.Count(a => a.GenreID.Equals(item.GenreID))],
+        </text>
+    }
+        ]);
+
+        var options = {
+            title: 'Albums per Genre',
+            pieHole: 0.4,
+            legend: 'none'
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('donutchart_genreAlbum'));
+        chart.draw(data, options);
+    }
+</script>
+
+<div class="row">
+    <div id="donutchart_genreAlbum" style="width:500px;height: 500px"></div>
+</div>
