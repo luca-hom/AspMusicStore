@@ -17,19 +17,19 @@
 
         var data = google.visualization.arrayToDataTable([
             ['Albums', 'AlbumRating',],
-            @foreach (var item in Model)
-            {
-                if(item.AlbumRating != null)
-                {
-                Console.WriteLine(item.AlbumTitle + item.AlbumRating);
-                <text>
-                        ['@item.AlbumTitle', @item.AlbumRating],
-                </text>
-                }
-                
-            }
+    @foreach (var item in Model)
+    {
+        if (item.AlbumRating != null)
+        {
+            Console.WriteLine(item.AlbumTitle + item.AlbumRating);
+            <text>
+                    ['@item.AlbumTitle', @item.AlbumRating],
+            </text>
+        }
 
-        ]);
+    }
+
+            ]);
         data.sort({ column: 1, desc: true })
 
         var options = {
@@ -57,3 +57,4 @@
         <div id="albumChart_div" style="width:1000px;heightL350px"></div>
     </div>
 </div>
+

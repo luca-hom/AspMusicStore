@@ -18,13 +18,13 @@
 
           var data = google.visualization.arrayToDataTable([
             ['Tracks', 'Rating',],
-              @foreach (var item in Model.DistinctBy(x => x.TrackID))
-                {
-                    <text>
-                        ['@item.Track.TrackTitle', @item.Track.TrackRating],
-                    </text>
-                }
-    
+    @foreach (var item in Model.DistinctBy(x => x.TrackID))
+    {
+        <text>
+                            ['@item.Track.TrackTitle', @item.Track.TrackRating],
+        </text>
+    }
+
           ]);
           data.sort({column: 1, desc: true})
 

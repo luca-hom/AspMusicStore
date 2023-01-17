@@ -161,17 +161,6 @@ namespace AspMusicStore.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> Analytics()
-        {
-            var musicStoreContext = _context.Ratings
-                .Include(r => r.Track)
-                .ThenInclude(a => a.Albums);
-
-            CalculateRatings(_context);
-
-            return View(await musicStoreContext.ToListAsync());
-        }
-
         public static void CalculateRatings(MusicStoreContext externalContext)
         {
                 var musicStoreContext = externalContext.Ratings
