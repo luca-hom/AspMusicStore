@@ -1,10 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AspMusicStore.Models
 {
     public class Musician
     {
         public int MusicianID { get; set; }
+        [Required]
         public string MusicianName { get; set; }
         
 

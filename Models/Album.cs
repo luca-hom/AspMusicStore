@@ -1,11 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 
 namespace AspMusicStore.Models
 {
     public class Album
     {
-        public int AlbumID { get; set; } 
+        public int AlbumID { get; set; }
+        [Required]
         public string AlbumTitle { get; set; }
         public string? Description { get; set; }
 

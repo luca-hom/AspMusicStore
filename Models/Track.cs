@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 
 namespace AspMusicStore.Models
@@ -6,6 +7,7 @@ namespace AspMusicStore.Models
     public class Track
     {
         public int TrackID { get; set; }
+        [Required]
         public string TrackTitle { get; set; }
         public string? TrackLyrics { get; set; }
         public int? Duration { get; set; }

@@ -8,6 +8,7 @@ namespace AspMusicStore.Models
         public int RatingID { get; set; }
 
         [Range(1, 5)]
+        [Required]
         public int RatingValue { get; set; }
 
         [ForeignKey("Track")]
