@@ -31,12 +31,6 @@ namespace AspMusicStore.Data
 
             modelBuilder.Entity<Rating>().ToTable("Ratings");
 
-
-            //Foreign Keys for Lists
-/*            modelBuilder.Entity<AudioStorageList>().HasKey(a => new { a.AudioStorageID, a.AlbumID });
-            modelBuilder.Entity<MusicianList>().HasKey(m => new { m.TrackID, m.MusicianID });
-            modelBuilder.Entity<TrackList>().HasKey(t => new { t.AlbumID, t.TrackID });*/
-
         }
 
     }
